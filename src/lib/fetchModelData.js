@@ -11,28 +11,29 @@
 
 // export default fetchModel;
 
-import models from "../modelData/models";
+// import models from "../modelData/models";
 
 async function fetchModel(url) {
-  if (url === "/test/info") {
-    return models.schemaInfo();
-  } 
-  
-  if (url === "/user/list") {
-    return models.userListModel();
-  } 
-  
-  if (url.startsWith("/user/")) {
-    const id = url.split("/")[2]; 
-    return models.userModel(id);
-  } 
-  
-  if (url.startsWith("/photosOfUser/")) {
-    const id = url.split("/")[2]; 
-    return models.photoOfUserModel(id);
-  } 
-  
-  throw new Error("404 Not Found: Url does not exist!");
+  const backend = `https://3dr9ls-8081.csb.app/api${url}`;
+
+  try {
+    // Gọi HTTP GET Request tới Backend
+    const response = await fetch(backend);
+
+    // Kiểm tra xem server có trả về lỗi (404, 500...) không
+    if (!response.ok) {
+      throw new Error(`HTTP Error! Status: ${response.status}`);
+    }
+
+    // Chuyển đổi dữ liệu thô nhận được thành object JSON
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    // In ra lỗi để dễ debug nếu sập mạng hoặc server chết
+    console.error("Lỗi khi fetch từ server:", error);
+    throw error;
+  }
 }
 
 export default fetchModel;
