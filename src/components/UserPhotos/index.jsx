@@ -1,9 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import {
-  ImageList,
-  ImageListItem
-} from "@mui/material";
+import { ImageList, ImageListItem } from "@mui/material";
 
 import {
   Typography,
@@ -19,61 +16,61 @@ import {
 import { Link } from "react-router-dom";
 
 // import models from "../../modelData/models";
-import fetchModel from "../../lib/fetchModelData"
+import fetchModel from "../../lib/fetchModelData";
 
 import "./styles.css";
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 /**
  * Define UserPhotos, a React component of Project 4.
  */
-function UserPhotos () {
-    // const user = useParams();
-    // const photos = models.photoOfUserModel(user.userId);
+function UserPhotos() {
+  // const user = useParams();
+  // const photos = models.photoOfUserModel(user.userId);
 
-    const user = useParams();
-    const [photos, setPhotos] = useState(null);
+  const user = useParams();
+  const [photos, setPhotos] = useState(null);
 
-    useEffect(() => {
-      const fetchPhotos = async () => {
-        try {
-          const data = await fetchModel(`/photosOfUser/${user.userId}`);
-          setPhotos(data);
-        } catch (err) {
-          console.error("Error fetching user photos:", err);
-        }
-      };
-
-      fetchPhotos();
-    }, [user.userId]);
-
-    const formatDate = (dateString) => {
-      return new Date(dateString).toLocaleString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+  useEffect(() => {
+    const fetchPhotos = async () => {
+      try {
+        const data = await fetchModel(`/photo/photosOfUser/${user.userId}`);
+        setPhotos(data);
+      } catch (err) {
+        console.error("Error fetching user photos:", err);
+      }
     };
 
-    if (!photos) {
-      return (
-        <Typography variant="h6" style={{ padding: "20px" }}>
-          Loading...
-        </Typography>
-      );
-    }
+    fetchPhotos();
+  }, [user.userId]);
 
-    if (photos.length === 0) {
-      return (
-        <Typography variant="h6" style={{ padding: "20px" }}>
-          This user doesn't have any pictures.
-        </Typography>
-      );
-    }
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
+  if (!photos) {
     return (
+      <Typography variant="h6" style={{ padding: "20px" }}>
+        Loading...
+      </Typography>
+    );
+  }
+
+  if (photos.length === 0) {
+    return (
+      <Typography variant="h6" style={{ padding: "20px" }}>
+        This user doesn't have any pictures.
+      </Typography>
+    );
+  }
+
+  return (
     <>
       {/* <Typography variant="body1">
         This should be the UserPhotos view of the PhotoShare app. Since it is
@@ -100,15 +97,22 @@ function UserPhotos () {
             component="img"
             image={require(`../../images/${item.file_name}`)}
             alt={item.title || "User photo"}
-            style={{ maxHeight: "600px", objectFit: "contain", backgroundColor: "#f5f5f5" }}
+            style={{
+              maxHeight: "600px",
+              objectFit: "contain",
+              backgroundColor: "#f5f5f5",
+            }}
           />
-          
+
           <CardContent>
             <Typography variant="caption" color="text.secondary">
               Posted on: {formatDate(item.date_time)}
             </Typography>
 
-            <Typography variant="h6" style={{ marginTop: "16px", marginBottom: "8px" }}>
+            <Typography
+              variant="h6"
+              style={{ marginTop: "16px", marginBottom: "8px" }}
+            >
               Comments
             </Typography>
             <Divider />
@@ -117,24 +121,40 @@ function UserPhotos () {
             {item.comments && item.comments.length > 0 ? (
               <List>
                 {item.comments.map((comment) => (
-                  <ListItem key={comment._id} alignItems="flex-start" style={{ paddingLeft: 0 }}>
+                  <ListItem
+                    key={comment._id}
+                    alignItems="flex-start"
+                    style={{ paddingLeft: 0 }}
+                  >
                     <ListItemText
                       primary={
                         <span>
                           {/*Link to user from comment*/}
-                          <Link 
-                            to={`/users/${comment.user._id}`} 
-                            style={{ textDecoration: "none", color: "#1976d2", fontWeight: "bold" }}
+                          <Link
+                            to={`/users/${comment.user._id}`}
+                            style={{
+                              textDecoration: "none",
+                              color: "#1976d2",
+                              fontWeight: "bold",
+                            }}
                           >
                             {comment.user.first_name} {comment.user.last_name}
                           </Link>
-                          <Typography variant="caption" color="text.secondary" style={{ marginLeft: "8px" }}>
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            style={{ marginLeft: "8px" }}
+                          >
                             {formatDate(comment.date_time)}
                           </Typography>
                         </span>
                       }
                       secondary={
-                        <Typography variant="body2" color="text.primary" style={{ marginTop: "4px" }}>
+                        <Typography
+                          variant="body2"
+                          color="text.primary"
+                          style={{ marginTop: "4px" }}
+                        >
                           {comment.comment}
                         </Typography>
                       }
@@ -143,7 +163,11 @@ function UserPhotos () {
                 ))}
               </List>
             ) : (
-              <Typography variant="body2" color="text.secondary" style={{ marginTop: "8px" }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                style={{ marginTop: "8px" }}
+              >
                 There are no comments.
               </Typography>
             )}
@@ -151,7 +175,7 @@ function UserPhotos () {
         </Card>
       ))}
     </>
-    );
+  );
 }
 
 export default UserPhotos;
